@@ -1,18 +1,18 @@
 var 
 
 // Sprite vars //
-aleatorioX,
-s_bird=[] ,
-s_bg,
-s_fg,
-s_pipeNorth,
-s_pipeSouth,
-s_text,
-s_score,
-s_splash,
-s_buttons,
-s_numberS,
-s_numberB;
+s_bird=[] ,//encargada de los prites del personaje
+s_bg, // encargada del sprite background (actualmente ya no se utiliza ya que el background se dibuja en el index)
+s_fg, // encargada del foreground y las plataformas... siendo el mismo sprite por el momento
+s_pipeNorth,//encargada del pipe que sale debajo
+s_pipeSouth,//encargada del pipe que sale por arriba
+//NOTA: ESTAS DOS VARIABLES ERAN PARTE DEL JUEGO FLAPPY BIRD, no tienen uso ahora... 
+s_text,//se encarga del texto "Get Ready"
+s_score, //Se encarga del score (tabla de scores)
+s_splash, // se encarga del texto del state splash... (el que dice "tap tap")
+s_buttons, //los botones que hacen referencia a los manipuladores del juego
+s_numberS, // se encarga de los numeros del score
+s_numberB; //se encarga de los numeros del score (los del mejor score guardado)
 
 /**
  * Simple sprite class
@@ -38,19 +38,19 @@ function Sprite(img, x, y, width, height) {
  * @param  {number} y   y-position on canvas to draw from
  */
 Sprite.prototype.draw = function(ctx, x, y) {
-
+    //encargada de dibujar todo lo referente a la imagen 1... que contiene la mayoría de sprites
             ctx.drawImage(this.img, this.x, this.y, this.width, this.height,
             x, y, this.width, this.height); 
 };
 
 Sprite.prototype.drawP = function(ctx, x, y) {
-
+    //encargada de dibujar todo lo referente al personaje en su estado de "corriendo"
             ctx.drawImage(this.img, this.x, this.y, this.width, this.height,
             x, y, this.width/1.5, this.height/1.5); 
 };
 
 Sprite.prototype.drawPJ = function(ctx, x, y) {
-
+    //encargada de dibujar todo lo referente al personaje en su estado de "salto"
             ctx.drawImage(this.img, this.x, this.y, this.width, this.height,
             x, y, this.width/2, this.height/2); 
 };
@@ -63,6 +63,8 @@ Sprite.prototype.drawPJ = function(ctx, x, y) {
 
 function personajeSprites(img){
     //Animaciones corriendo
+    //Aqui se inicializan todos los sprites de la imagen 3... Sprite(imagen,posiciónX,posiciónY,el offsetX, el offsetY)
+    //los offsets son para determinar el alto y ancho del cuadro del que será el sprite
     s_bird[1] = new Sprite(img,0, 0, 78, 112.5);
     s_bird[2] = new Sprite(img,80, 0, 78, 112.5);
     s_bird[3] = new Sprite(img,170, 0, 78, 112.5);
@@ -77,6 +79,8 @@ function personajeSprites(img){
 
 function personajeSpritesJ(img){
     //animaciones brincando
+    //Aqui se inicializan todos los sprites de la imagen 4... Sprite(imagen,posiciónX,posiciónY,el offsetX, el offsetY)
+    //los offsets son para determinar el alto y ancho del cuadro del que será el sprite
     s_bird[11] = new Sprite(img,0, 0, 125, 112.5);
     s_bird[12] = new Sprite(img,125, 0, 125, 112.5);
     s_bird[13] = new Sprite(img,250, 0, 125, 112.5);
@@ -88,15 +92,8 @@ function personajeSpritesJ(img){
 }
  
 function initSprites(img,width,height) {
-
-    /*s_bird = [
-        new Sprite(img, 68, 112, 35, 35),
-        new Sprite(img, 136, 112, 35, 35),
-        new Sprite(img, 135, 112, 35, 35),
-        new Sprite(img, 174, 112, 35, 35),
-        new Sprite(img, 213, 112, 35, 35)
-    ];*/
-
+    //Aqui se inicializan todos los sprites de la imagen 1... Sprite(imagen,posiciónX,posiciónY,el offsetX, el offsetY)
+    //los offsets son para determinar el alto y ancho del cuadro del que será el sprite
     controlUp = new Sprite(img,224,156,20,20 );
     controlDown = new Sprite(img,224,175,20,22);
     
@@ -141,6 +138,8 @@ function initSprites(img,width,height) {
      * @param  {number} center center to offset from
      * @param  {number} offset padd text to draw right to left
      */
+
+     //solo determina como colocar los numeros en la tabla de scores...
     s_numberS.draw = s_numberB.draw = function(ctx, x, y, num, center, offset) {
         num = num.toString();
 

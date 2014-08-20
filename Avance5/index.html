@@ -36,31 +36,33 @@ instructions how to enable JavaScript in your web browser</a>.</p>
 
 var
 
-// Game vars //
+// varianles deñ juego //
 
-canvas,
-ctx,
-width,
-height,
+canvas, //canvas a usar
+ctx, // eñ contexto
+width, // ancho de pantalla
+height, //alto de pantalla
 
-fgpos = 0,
-bgpos = 0,
-frames = 0,
-score = 0,
-best = 0,
-img2 = new Image(),
-img3 = new Image(),
-img4 = new Image(),
+fgpos = 0, //la posición del foreground
+bgpos = 0, // la posición del background
+frames = 0, //los frames del juego
+score = 0, // el score del jugador
+best = 0, // el mejor score guardado
+img2 = new Image(), // variable que contendra la imagen del background
+img3 = new Image(), //variable que contendra la imagen del personaje corriendo
+img4 = new Image(), //variable que contendra la imagen del personaje saltando
 
 // State vars //
 
-currentstate,
+currentstate, //el estado en el que se encuentra el juego
 states = {
-	Splash: 0, Game: 1, Score: 2
+	Splash: 0, Game: 1, Score: 2 // splash: cuando el juego esta en espera del jugador para iniciar
+	                             //Game: cuando el juego inicia y el jugador tiene el control del personaje
+	                             //Score: cuando el juego termina y se muestra el score del jugador
 },
 
 // Game objects //
-okbtn;
+okbtn; // el boton de "OK" que aparece en el estado "score" para que el jugador pueda volver a iniciar el juego
 
 /**
  * Called on mouse or touch press. Update and change state
@@ -68,45 +70,50 @@ okbtn;
  * 
  * @param  {MouseEvent/TouchEvent} evt tho on press event
  */
+
+
+ // llamada que se realiza cuando el jugador toca cualquier parte de la pantalla
 function onpress(evt) {
 
 	switch (currentstate) {
 
-		// change state and update bird velocity
+		// se pasa del estado Splash al estado Game
 		case states.Splash:
 			currentstate = states.Game;
 			break;
 
-		// update bird velocity
+		// Si se encuentra en el estado Game, y el jugador toca la pantalla, entonces se localiza el punto de toque...y se determina si el boton brinca fue presionado o en otro caso, el boton bajar.
 		case states.Game:
 			var pos = getMousePos(canvas,evt);
-			//alert(pos.x);
-			//alert(pos.y);
 			if(pos.x>0 && pos.x< 80 && pos.y < height && pos.y>height-150 )
-				personaje.jump(true);
+				personaje.jump(true); //BOTON ARRIBA
 			else if (pos.x>width-100 && pos.x< width && pos.y < height && pos.y>height-150)
-				onmove();
+				onmove(); //BOTON ABAJO 
 			break;
-
+			//Llamada al state Score
 		case states.Score:
 
-			obstaculos.reset();
-			plataformas.reset();
-			currentstate = states.Splash;
-			score = 0;
+			obstaculos.reset(); // Se resetean los obstaculos del juego
+			plataformas.reset(); // se resetean las plataformas
+			currentstate = states.Splash; // se cambia al estado SPlash
+			score = 0; // EL escore se reinicia en "0"
 			break;
 
 	}
 }
 
+
+//funciona cuando el boton se ha dejado de presionar... esto ayuda para que el jugador decida que tan "fuerte" quiere que su personaje brinque, al dejar de presionar se manda una bandera a personaje, indicando que la gravedar ya puede comenzar a hacer su trabajo
 function onpress2(evt) {
 	personaje.jump(false);
 }
 
+//solo se activa cuando el jugador decide bajar de la plataforma
 function onmove() {
 	personaje.bajarPlataforma();
 }
-
+//obtiene la dirección en X y en Y respecto a la pantalla del cliente
+//NOTA : los metodos Offset solo funcionan en algunos navegadores, Chrome es uno de ellos
 function getMousePos(canvas, evt) {
         var rect = canvas.getBoundingClientRect();
         var mx = evt.offsetX, my = evt.offsetY;
@@ -123,39 +130,44 @@ function getMousePos(canvas, evt) {
 }
 
 /**
- * Starts and initiate the game
+ * Metodo main de inicio de juego
  */
 function main() {
-	// create canvas and set width/height
+	// Se crea el canvas antes hecho en html
 	canvas = document.createElement("canvas");
-
+	//se indica el width y el height mediante las especificiaciones de la pantalla del usuario
 	width = window.innerWidth;
 	height = window.innerHeight;
-
+	//se añaden dos eventos, para control del brinco 
+	//NOTA : ESTAS VARIABLES SOLO FUNCIONAN PARA PC
 	var evt = "mousedown";
 	var evt2 = "mouseup";
 
+	//Se añaden dos eventos para control del brinco
+	//NOTA: ESTAS VARIABLES SOLO FUNCIONAN EN PANTALLAS TOUCH!!! comentar arriba y descomentar estas para que funcione en pantallas touch
+
 	//var evt = "touchstart";
-	//var evt2 = "touchend";
-	// listen for input event
-	
+	//var evt2 = "touchend";	
 
-	//canvas.addEventListener("mousedown", getPosition, false);
-
-	canvas.width = width;
+	//Se asignan tamaños a canvas
+	canvas.width = width; 
 	canvas.height = height;
+	//solo para control de usuarios con una versión de HTML5 desactualizada
 	if (!(!!canvas.getContext && canvas.getContext("2d"))) {
 		alert("Your browser doesn't support HTML5, please update to latest version");
 	}
+	//se asigna el contexto a la variable ctx 
 	ctx = canvas.getContext("2d");
-
+	//se inicializa el primer estado del juego
 	currentstate = states.Splash;
-	// append canvas to document
+	// Se coloca el canvas en el documento html
 	document.body.appendChild(canvas);
-	// initate graphics and okbtn
+	//Se agrega una variable mas de imagenes... esta es la que lleva el control, porque contiene la mayoría de los sprites del juego
 	var img = new Image();
+
+	//Se hace un onload para cada una de las imagenes, esto es para que ninguna se cargue antes que las otras, de esta forma el usuario nunca ve como se van colocando las imagenes en el juego (si estas llegaran a ser muy pesadas), en lugar de eso, solo verá una pantalla en negro hasta que todas las imagenes hayan sido colocadas. 
 	img.onload = function() {
-		initSprites(this,width,height);
+		initSprites(this,width,height);//llamada a initSprites (img,width,height)
 		//boton OK al finalizar
 		okbtn = {
 			x: (width - s_buttons.Ok.width)/2,
@@ -166,16 +178,18 @@ function main() {
 
 		img2.onload = function(){
 			img3.onload = function(){
-				personajeSprites(this);
+				personajeSprites(this); //this = img2
 				img4.onload = function(){
-					personajeSpritesJ(this);
-					run();
+					personajeSpritesJ(this); //this = img3
+					run(); //el hilo principal del juego
 				}
 			}
 		}
 	}
+	//se añaden los listeners del juego
 	document.addEventListener(evt,onpress);
 	document.addEventListener(evt2,onpress2);
+	//ruta a las imagenes 
 	img.src = "res/sheet.png";
 	img2.src = "res/background.jpg";
 	img3.src = "res/personaje.png";
@@ -189,9 +203,9 @@ function run() {
 	var loop = function() {
 		update();
 		render();
-		window.requestAnimationFrame(loop, canvas);
+		window.requestAnimationFrame(loop, canvas);//llama a loop de nuevo con el canvas seleccionado
 	}
-	window.requestAnimationFrame(loop, canvas);
+	window.requestAnimationFrame(loop, canvas); //llama a loop de nuevo con el canvas seleccionado
 }
 
 /**
@@ -200,14 +214,16 @@ function run() {
 function update() {
 	frames++;
 	personaje.update();
+	//si el jugador pierde, se dejan de mover el escenario, background y foregroud
 	if (currentstate != states.Score) {
-		fgpos = (fgpos - 8);
-		bgpos = (bgpos - 0.5);
+		fgpos = (fgpos - 8); //la velocidad con la que se desplaza el foregroud
+		bgpos = (bgpos - 0.5);//velocidad con que se desplaza el background
 	} 
 	else {
 		// set best score to maximum score
 		best = Math.max(best, score);
 	}
+	//se actualizan las posiciones de los pipes y de las plataformas 
 	if (currentstate === states.Game) {
 		plataformas.update();
 		obstaculos.update();
@@ -215,38 +231,43 @@ function update() {
 }
 
 /**
- * Draws bird and all pipes and assets to the canvas
+ * Dibuja todo lo necesario para el juego
  */
 function render() {
 	// draw background color
-	ctx.fillRect(0, 0, width, height);
+	//ctx.fillRect(0, 0, width, height);
 	// draw background sprites
 
 	//Divide el width de la pantalla entre el del sprite
+	//Esto para saber cuantas veces cabe el sprite del background en la pantalla
 	var numBg = width/img2.width;
-	//llena los espacios de acuerdo a la pantalla de usuario
+	//llena los espacios de acuerdo a la pantalla de usuario (referenciando al background)
 	for (var i = 0; i <= numBg+1; i++) {
 		ctx.drawImage(img2,bgpos+img2.width*i,0,img2.width,height); 
 	};
+	//deja de dibujar el sprite de backgroun que llegue fuera de la pantalla del usuario
 	if(bgpos+img2.width<=0){
 		bgpos=0;
 	}
+	//se añaden plataformas y obstaculos 
 	plataformas.draw(ctx);
 	obstaculos.draw(ctx);
 	//Divide el width de la pantalla entre el del sprite
+	//nuevamente para saber cuantas veces cabe el sprite (referenciando ahora al foreground)
 	var numFg = width/s_fg.width;
 	//llena los espacios de acuerdo a la pantalla de usuario
 	for (var i = 0; i < numFg+1; i++) {
 		s_fg.draw(ctx, fgpos+s_fg.width*i, height - s_fg.height/2);
 	};
+	//se deja de dibujar el sprite de foreground que ha quedado fuera de pantalla
 	if(fgpos+s_fg.width<=0){
 		fgpos=0;
 	}
+	//se dibuja al personaje en este contexto
 	personaje.draw(ctx);
-	// draw forground sprites
 
 	var width2 = width/2; // center of canvas
-
+	//Lo siguiente solo se encarga de posicionar los mensajes al jugador, como el "get ready" o su score
 	if (currentstate === states.Splash) {
 		// draw splash text and sprite to canvas
 		s_splash.draw(ctx, width2 - s_splash.width/2, height/2);
