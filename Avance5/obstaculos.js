@@ -8,7 +8,7 @@ var obstaculos = {
 	//Resetea los arreglos
 	reset: function() {
 		this._pipes = [];
-		this._anchoP=[];
+		this._anchoP = [];
 	},
 	//obtiene el ancho de las plataformas para poder colocar el pipe obre ellas adecuadamente 
 	getAnchoPlataformas:function(){
@@ -17,12 +17,56 @@ var obstaculos = {
 			this._anchoP[i]=plataformas.obtenAnchoPlataforma(i); // se obtiene el ancho de la plataforma
 		};
 	},
+
+
 	//Se encarga de dividir el ancho de la plataforma en 7 pedazos... esto para colocar al pipe de manera aleatoria
 	//en cada uno de estos pedazos.
 	obtenXPlataforma: function(i){
 		var posicion = this._anchoP[i]/7;
 
 		 return posicion * Math.floor((Math.random() * 6) + 1);
+	},
+
+	/**
+		Verificamos si posX ya ha salido en los pipes
+	*/
+	isRepeated: function(posX,posiciones){
+		for (var i = 0; i < posiciones.length; i++) {
+			if(posX == posiciones[i])
+				return true;
+		}
+		return false;
+	},
+
+	/**
+		Llenamos el arreglo de Pipes para asegurarnos que no se repita la posicion 
+		en X
+	*/
+	createPipes: function(){
+		var plataforma = 0; //La plataforma actual calculandose
+		var posiciones = new Array();
+		posiciones[0] = -1;
+		posiciones[1] = -1;
+		posiciones[2] = -1;
+
+		// [Falta comprobar el pipe superior]
+		while(plataforma < 2){
+			var posY = height - getAltura(plataforma);
+			var posX = width + this.obtenXPlataforma(plataforma);
+
+			while(this.isRepeated(posX,posiciones)){
+				posX = width + this.obtenXPlataforma(plataforma);
+			}
+			posiciones[plataforma] = posX;
+			console.log("Ya no hay repetidos");
+			this._pipes.push({
+				x: posX,
+				y: posY, //su altura
+				width: s_pipeSouth.width, //ancho del sprite es asignado a la variable width
+				height: s_pipeSouth.height //alto del sprite es asignado a la variable height
+			});
+			plataforma++;
+		}
 	},
 
 	/**
@@ -35,6 +79,10 @@ var obstaculos = {
 		if (frames % 500 === 0) {
 			//se obtiene el ancho de plataformas
 			this.getAnchoPlataformas();
+
+			this.createPipes();
+
+			/*
 			// calcula la altura de la plataforma 1
 			var _y =height- getAltura1();
 			// create and push pipe to array
@@ -54,6 +102,8 @@ var obstaculos = {
 				width: s_pipeSouth.width,//ancho del sprite es asignado a la variable width
 				height: s_pipeSouth.height//alto del sprite es asignado a la variable height
 			});
+*/
+			
 		}
 
 		//ciclo que controla todo lo relacionado a la posición de los pipes e incluso si uno de estos fue tocado por el personaje
@@ -67,11 +117,14 @@ var obstaculos = {
 				// collision check, calculates x/y difference and
 				// use normal vector length calculation to determine
 				// intersection
-				var cx  = Math.min(Math.max(personaje.x, p.x), p.x+p.width-50);
+				
+				//var cx  = Math.min(Math.max(personaje.x, p.x), (p.x+p.width) - (p.width) );
+				var cx  = Math.min(Math.max(personaje.x, p.x), p.x);
+
 				//var cy1 = Math.min(Math.max(bird.y, p.y), p.y+p.height);
 				var cy2 = Math.min(Math.max(personaje.y, p.y+p.height-100), p.y+2*p.height-100);
 				// closest difference
-				var dx  = personaje.x - cx;
+				var dx  = (personaje.x + 30) - cx;
 				var dy2 = personaje.y - cy2;
 				// vector length
 				var d2 = dx*dx + dy2*dy2;

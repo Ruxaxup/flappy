@@ -29,6 +29,9 @@ function getAltura2(){
 	return altura2;
 }
 
+function getAltura(plataforma){
+	return plataforma==0?altura1:altura2;
+}
 
 
 var plataformas = {
