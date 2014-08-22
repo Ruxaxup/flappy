@@ -35,7 +35,7 @@ instructions how to enable JavaScript in your web browser</a>.</p>
 <script>
 
 var
-
+musicsrc="res/RiseOfLiberty.wav", 
 // varianles deñ juego //
 
 canvas, //canvas a usar
@@ -129,6 +129,12 @@ function getMousePos(canvas, evt) {
         };
 }
 
+function music(musicLoop){
+	musicsrc.currentTime=0;
+	musicsrc.play();
+	alert("hola")
+}
+
 /**
  * Metodo main de inicio de juego
  */
@@ -138,10 +144,12 @@ function main() {
 	//se indica el width y el height mediante las especificiaciones de la pantalla del usuario
 	width = window.innerWidth;
 	height = window.innerHeight;
+	document.write('<embed src=\"'+musicsrc+'\" hidden="true" border="0" width="0" height="0" autostart="true" loop="TRUE">');
 	//se añaden dos eventos, para control del brinco 
 	//NOTA : ESTAS VARIABLES SOLO FUNCIONAN PARA PC
 	var evt = "mousedown";
 	var evt2 = "mouseup";
+	var musicLoop = "ended";
 
 	//Se añaden dos eventos para control del brinco
 	//NOTA: ESTAS VARIABLES SOLO FUNCIONAN EN PANTALLAS TOUCH!!! comentar arriba y descomentar estas para que funcione en pantallas touch
@@ -189,6 +197,7 @@ function main() {
 	//se añaden los listeners del juego
 	document.addEventListener(evt,onpress);
 	document.addEventListener(evt2,onpress2);
+	document.addEventListener(musicLoop,music);
 	//ruta a las imagenes 
 	img.src = "res/sheet.png";
 	img2.src = "res/background.jpg";
