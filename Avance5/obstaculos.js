@@ -58,12 +58,11 @@ var obstaculos = {
 				posX = width + this.obtenXPlataforma(plataforma);
 			}
 			posiciones[plataforma] = posX;
-			console.log("Ya no hay repetidos");
 			this._pipes.push({
 				x: posX,
 				y: posY, //su altura
-				width: s_pipeSouth.width, //ancho del sprite es asignado a la variable width
-				height: s_pipeSouth.height //alto del sprite es asignado a la variable height
+				width: s_pipeNorth.width, //ancho del sprite es asignado a la variable width
+				height: s_pipeNorth.height //alto del sprite es asignado a la variable height
 			});
 			plataforma++;
 		}
@@ -79,31 +78,8 @@ var obstaculos = {
 		if (frames % 500 === 0) {
 			//se obtiene el ancho de plataformas
 			this.getAnchoPlataformas();
-
-			this.createPipes();
-
-			/*
-			// calcula la altura de la plataforma 1
-			var _y =height- getAltura1();
-			// create and push pipe to array
-			this._pipes.push({
-				x: width+ this.obtenXPlataforma(0),//se asigna aleatoriamente su posición en la plataforma
-				y: _y, //su altura
-				width: s_pipeSouth.width, //ancho del sprite es asignado a la variable width
-				height: s_pipeSouth.height //alto del sprite es asignado a la variable height
-			});
-
-			// calcula la altura de la plataforma 2
-			var _y =height- getAltura2();
-			// create and push pipe to array
-			this._pipes.push({
-				x: width+ this.obtenXPlataforma(1), //Se asigna aleatoriamente su posición en la plataforma
-				y: _y,
-				width: s_pipeSouth.width,//ancho del sprite es asignado a la variable width
-				height: s_pipeSouth.height//alto del sprite es asignado a la variable height
-			});
-*/
-			
+			//Controla que no se repitan las pipes en Y
+			this.createPipes();	
 		}
 
 		//ciclo que controla todo lo relacionado a la posición de los pipes e incluso si uno de estos fue tocado por el personaje

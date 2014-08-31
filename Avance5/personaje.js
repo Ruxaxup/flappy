@@ -100,14 +100,14 @@ var personaje = {
 	 * @param  {CanvasRenderingContext2D} ctx the context used for
 	 *                                        drawing
 	 */
-	draw: function(ctx) {
+	draw: function(ctx, posY) {
 		ctx.save();//se guarda el contexto
 		// translate and rotate ctx coordinatesystem
-		ctx.translate(this.x, this.y);
+		//ctx.translate(this.x, this.y);
 		//se determina que sprite se va a usar
 		if(this.brincaB==false){
 			var n = this.animation[this.frame];
-			s_bird[n].drawP(ctx, -s_bird[n].width/4, -s_bird[n].height/2);
+			s_bird[n].drawP(ctx, s_bird[n].d_width, height - (posY + s_bird[n].d_height));
 		}
 		else if(this.brincaB==true) {
 			var n = this.animation2[this.frame];

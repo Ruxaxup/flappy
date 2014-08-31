@@ -1,5 +1,7 @@
-var 
-
+const SCALEX_PLAYER = 0.08, SCALEY_PLAYER = 0.2;
+const SCALEY_FG = 0.15;
+const SCALEY_PLAT = 0.05;
+var
 // Sprite vars //
 s_bird=[] ,//encargada de los prites del personaje
 s_bg, // encargada del sprite background (actualmente ya no se utiliza ya que el background se dibuja en el index)
@@ -23,12 +25,28 @@ s_numberB; //se encarga de los numeros del score (los del mejor score guardado)
  * @param {number} width  width of sprite 
  * @param {number} height height of sprite
  */
-function Sprite(img, x, y, width, height) {
+function Sprite(img, x, y, widthImg, heightImg, type) {
     this.img = img;
     this.x = x*2;
     this.y = y*2;
-    this.width = width*2;
-    this.height = height*2;
+    this.type = type;
+    this.width = widthImg*2;
+    this.height = heightImg*2;
+    switch(type){
+        case 0:
+        case 1:
+        this.d_width = width * SCALEX_PLAYER;
+        this.d_height = height * SCALEY_PLAYER;
+        break;
+        case 2: //Foreground
+        this.d_height = height * SCALEY_FG;
+        console.log("Alto FG = "+this.d_height);
+        break;
+        case 3:
+        this.d_height = height * SCALEY_PLAT;
+        break;
+    }
+    
 };
 /**
  * Draw sprite ta canvas context
@@ -39,20 +57,30 @@ function Sprite(img, x, y, width, height) {
  */
 Sprite.prototype.draw = function(ctx, x, y) {
     //encargada de dibujar todo lo referente a la imagen 1... que contiene la mayoría de sprites
-            ctx.drawImage(this.img, this.x, this.y, this.width, this.height,
-            x, y, this.width, this.height); 
+    if(this.type == 2 || this.type == 3){ //Foreground
+        ctx.drawImage(this.img, this.x, this.y, this.width, this.height,
+            x, y, this.width, this.d_height);
+    }else{
+        ctx.drawImage(this.img, this.x, this.y, this.width, this.height,
+            x, y, this.width, this.height);         
+    }
+
 };
 
 Sprite.prototype.drawP = function(ctx, x, y) {
+    console.log("Player Y = "+y);
     //encargada de dibujar todo lo referente al personaje en su estado de "corriendo"
             ctx.drawImage(this.img, this.x, this.y, this.width, this.height,
-            x, y, this.width/1.5, this.height/1.5); 
+            x, y, this.d_width, this.d_height);
+
 };
 
 Sprite.prototype.drawPJ = function(ctx, x, y) {
     //encargada de dibujar todo lo referente al personaje en su estado de "salto"
+            //ctx.drawImage(this.img, this.x, this.y, this.width, this.height,
+            //x, y, this.width/2, this.height/2);
             ctx.drawImage(this.img, this.x, this.y, this.width, this.height,
-            x, y, this.width/2, this.height/2); 
+            x, y, this.d_width, this.d_height); 
 };
 
 /**
@@ -65,30 +93,30 @@ function personajeSprites(img){
     //Animaciones corriendo
     //Aqui se inicializan todos los sprites de la imagen 3... Sprite(imagen,posiciónX,posiciónY,el offsetX, el offsetY)
     //los offsets son para determinar el alto y ancho del cuadro del que será el sprite
-    s_bird[1] = new Sprite(img,0, 0, 78, 112.5);
-    s_bird[2] = new Sprite(img,80, 0, 78, 112.5);
-    s_bird[3] = new Sprite(img,170, 0, 78, 112.5);
-    s_bird[4] = new Sprite(img,275, 0, 78, 112.5);
-    s_bird[5] = new Sprite(img,355, 0, 78, 112.5);
-    s_bird[6] = new Sprite(img,0, 125, 78, 95);
-    s_bird[7] = new Sprite(img,80, 125, 78, 95);
-    s_bird[8] = new Sprite(img,170, 125, 78, 95);
-    s_bird[9] = new Sprite(img,260, 125, 78, 95);
-    s_bird[10] = new Sprite(img,355, 125, 78, 95);
+    s_bird[1] = new Sprite(img,0, 0, 78, 112.5,0);
+    s_bird[2] = new Sprite(img,80, 0, 78, 112.5,0);
+    s_bird[3] = new Sprite(img,170, 0, 78, 112.5,0);
+    s_bird[4] = new Sprite(img,275, 0, 78, 112.5,0);
+    s_bird[5] = new Sprite(img,355, 0, 78, 112.5,0);
+    s_bird[6] = new Sprite(img,0, 125, 78, 95,0);
+    s_bird[7] = new Sprite(img,80, 125, 78, 95,0);
+    s_bird[8] = new Sprite(img,170, 125, 78, 95,0);
+    s_bird[9] = new Sprite(img,260, 125, 78, 95,0);
+    s_bird[10] = new Sprite(img,355, 125, 78, 95,0);
 }
 
 function personajeSpritesJ(img){
     //animaciones brincando
     //Aqui se inicializan todos los sprites de la imagen 4... Sprite(imagen,posiciónX,posiciónY,el offsetX, el offsetY)
     //los offsets son para determinar el alto y ancho del cuadro del que será el sprite
-    s_bird[11] = new Sprite(img,0, 0, 125, 112.5);
-    s_bird[12] = new Sprite(img,125, 0, 125, 112.5);
-    s_bird[13] = new Sprite(img,250, 0, 125, 112.5);
-    s_bird[14] = new Sprite(img,375, 0, 125, 112.5);
-    s_bird[15] = new Sprite(img,0, 125, 125, 112.5);
-    s_bird[16] = new Sprite(img,125, 125, 125, 112.5);
-    s_bird[17] = new Sprite(img,250, 125, 125, 112.5);
-    s_bird[18] = new Sprite(img,375, 125, 125, 112.5);
+    s_bird[11] = new Sprite(img,0, 0, 125, 112.5,1);
+    s_bird[12] = new Sprite(img,125, 0, 125, 112.5,1);
+    s_bird[13] = new Sprite(img,250, 0, 125, 112.5,1);
+    s_bird[14] = new Sprite(img,375, 0, 125, 112.5,1);
+    s_bird[15] = new Sprite(img,0, 125, 125, 112.5,1);
+    s_bird[16] = new Sprite(img,125, 125, 125, 112.5,1);
+    s_bird[17] = new Sprite(img,250, 125, 125, 112.5,1);
+    s_bird[18] = new Sprite(img,375, 125, 125, 112.5,1);
 }
  
 function initSprites(img,width,height) {
@@ -98,9 +126,9 @@ function initSprites(img,width,height) {
     controlDown = new Sprite(img,224,175,20,22);
     
     s_bg = new Sprite(img,   0, 0, 138, 114);
-    s_fg = new Sprite(img, 138, 0, 112,  56);
+    s_fg = new Sprite(img, 138, 0, 112,  56, 2);
 
-    s_fgPLataforma = new Sprite(img, 138, 0, 112,  15);
+    s_fgPLataforma = new Sprite(img, 138, 0, 112,  15, 3);
     
     s_pipeNorth = new Sprite(img, 251, 0, 26, 85);
     s_pipeSouth = new Sprite(img, 277, 0, 26, 85);

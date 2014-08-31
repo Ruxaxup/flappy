@@ -2,24 +2,7 @@ var alturaPlayer=112; //varible que contiene la altura del personaje... solo par
 var altura1 = alturaPlayer*2;//altura de la primera plataforma
 var altura2 = alturaPlayer*3.5;//altura de la 2da plataforma
 
-//determina que altura va a colocar 
-function calculaAltura() {
-	var aux  =	Math.floor((Math.random() * 2) + 1); 
-		var altura=0;
-		switch(aux) {
-    		 case 1:
-       			 altura = height-altura1;
-             break;
-   			 case 2:
-       			 altura = height-altura2;
-      		 break;
 
-   			 default:
-        		alert("no existe altura");
-        	 break;
-		} 
-		return altura;
-}
 //obtener altura 1
 function getAltura1(){
 	return altura1;
@@ -41,6 +24,28 @@ var plataformas = {
 	/**
 	 *Array de plataformas
 	 */
+
+//determina que altura va a colocar 
+	calculaAltura: function() {
+	var aux  =	Math.floor((Math.random() * 2) + 1); 
+		var altura=0;
+		switch(aux) {
+			 case 1:
+	   			 altura = height-altura1;
+	         break;
+				 case 2:
+	   			 altura = height-altura2;
+	  		 break;
+
+				 default:
+	    		alert("no existe altura");
+	    	 break;
+		} 
+		return altura;
+	},
+
+
+
 	//resetea el array
 	reset: function() {
 		
@@ -65,31 +70,22 @@ var plataformas = {
 		if (frames % 500 === 0) {
 
 			// calcula la posición en "y" de la plataforma
-			var _y = calculaAltura();
+			//var _y = this.calculaAltura();
 
 			// mete la plataforma en el arreglo
 			this._plataformas.push({
 				x: width+100,// se le agrega un 100 para que aparezca 100 pixeles fuera de la pantalla
-				y: _y,
+				y: height - altura1,
 				width: s_fgPLataforma.width * 7, //se multiplica por 7 para hacer una plataforma del foreground, 7 veces su tamaño
 				height: s_fgPLataforma.height, //se asigna el "alto" de la plataforma... haciendo referencia al alto del sprite
 			});
-			//crea plataformas en la altura contraria a la que se creo mas arriba...
-			if(_y== height-altura1){
-				this._plataformas.push({
-					x: width+100,
-					y: height- altura2,
-					width: s_fgPLataforma.width * 7,
-					height: s_fgPLataforma.height,
-				});
-			}else{
-				this._plataformas.push({
-					x: width+100,// se le agrega un 100 para que aparezca 100 pixeles fuera de la pantalla
-					y: height- altura1,
-					width: s_fgPLataforma.width *7,
-					height: s_fgPLataforma.height,
-				});
-			}
+
+			this._plataformas.push({
+				x: width+100,// se le agrega un 100 para que aparezca 100 pixeles fuera de la pantalla
+				y: height - altura2,
+				width: s_fgPLataforma.width * 7, //se multiplica por 7 para hacer una plataforma del foreground, 7 veces su tamaño
+				height: s_fgPLataforma.height, //se asigna el "alto" de la plataforma... haciendo referencia al alto del sprite
+			});
 
 		}
 		//ciclo encargado de las plataformas, tanto de su posición como de si el personaje las esta tocando
@@ -131,7 +127,7 @@ var plataformas = {
 	},
 
 	/**
-	 * Draw all pipes to canvas context.
+	 * Draw all plataforms to canvas context.
 	 * 
 	 * @param  {CanvasRenderingContext2D} ctx the context used for
 	 *                                        drawing

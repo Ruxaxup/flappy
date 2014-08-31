@@ -140,17 +140,20 @@ function main() {
 	canvas = document.createElement("canvas");
 	//se indica el width y el height mediante las especificiaciones de la pantalla del usuario
 	width = window.innerWidth;
+	console.log("Width = "+width);
 	height = window.innerHeight;
+	console.log("Height = "+height);
 	//se añaden dos eventos, para control del brinco 
 	//NOTA : ESTAS VARIABLES SOLO FUNCIONAN PARA PC
-	var evt = "mousedown";
-	var evt2 = "mouseup";
+	
+	//var evt = "mousedown";
+	//var evt2 = "mouseup";
 
 	//Se añaden dos eventos para control del brinco
 	//NOTA: ESTAS VARIABLES SOLO FUNCIONAN EN PANTALLAS TOUCH!!! comentar arriba y descomentar estas para que funcione en pantallas touch
 
-	//var evt = "touchstart";
-	//var evt2 = "touchend";	
+	var evt = "touchstart";
+	var evt2 = "touchend";	
 
 	//Se asignan tamaños a canvas
 	canvas.width = width; 
@@ -259,15 +262,16 @@ function render() {
 	//nuevamente para saber cuantas veces cabe el sprite (referenciando ahora al foreground)
 	var numFg = width/s_fg.width;
 	//llena los espacios de acuerdo a la pantalla de usuario
+	//******************************************************//
 	for (var i = 0; i < numFg+1; i++) {
-		s_fg.draw(ctx, fgpos+s_fg.width*i, height - s_fg.height/2);
+		s_fg.draw(ctx, fgpos+s_fg.width*i, height - s_fg.d_height);
 	};
 	//se deja de dibujar el sprite de foreground que ha quedado fuera de pantalla
 	if(fgpos+s_fg.width<=0){
 		fgpos=0;
 	}
 	//se dibuja al personaje en este contexto
-	personaje.draw(ctx);
+	personaje.draw(ctx, s_fg.d_height);
 
 	var width2 = width/2; // center of canvas
 	//Lo siguiente solo se encarga de posicionar los mensajes al jugador, como el "get ready" o su score
