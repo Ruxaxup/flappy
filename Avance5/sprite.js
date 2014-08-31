@@ -57,7 +57,7 @@ function Sprite(img, x, y, widthImg, heightImg, type) {
  */
 Sprite.prototype.draw = function(ctx, x, y) {
     //encargada de dibujar todo lo referente a la imagen 1... que contiene la mayoría de sprites
-    if(this.type == 2 || this.type == 3){ //Foreground
+    if(this.type == 2 || this.type == 3||this.type == 1){ //Foreground
         ctx.drawImage(this.img, this.x, this.y, this.width, this.height,
             x, y, this.width, this.d_height);
     }else{

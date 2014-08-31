@@ -25,9 +25,9 @@
 		right: 0;
 	}
 	</style>
-	 <audio src="res/1erSonido.ogg" autoplay loop>
+	 <audio id = "music" src="res/1erSonido.ogg">
 		Your browser does not support the audio element.
-	</audio> 
+	</audio>
 </head>
 <body>
 <noscript>
@@ -40,7 +40,7 @@ instructions how to enable JavaScript in your web browser</a>.</p>
 var
 //musicsrc="res/RiseOfLiberty.wav", 
 // varianles deñ juego //
-
+Audio,
 canvas, //canvas a usar
 ctx, // el contexto
 width, // ancho de pantalla
@@ -146,14 +146,14 @@ function main() {
 	//se añaden dos eventos, para control del brinco 
 	//NOTA : ESTAS VARIABLES SOLO FUNCIONAN PARA PC
 	
-	//var evt = "mousedown";
-	//var evt2 = "mouseup";
+	var evt = "mousedown";
+	var evt2 = "mouseup";
 
 	//Se añaden dos eventos para control del brinco
 	//NOTA: ESTAS VARIABLES SOLO FUNCIONAN EN PANTALLAS TOUCH!!! comentar arriba y descomentar estas para que funcione en pantallas touch
 
-	var evt = "touchstart";
-	var evt2 = "touchend";	
+	//var evt = "touchstart";
+	//var evt2 = "touchend";	
 
 	//Se asignan tamaños a canvas
 	canvas.width = width; 
@@ -187,6 +187,9 @@ function main() {
 				personajeSprites(this); //this = img2
 				img4.onload = function(){
 					personajeSpritesJ(this); //this = img3
+					//obtiene audio y lo pone en estado "play"
+					Audio = document.getElementById('music');
+					Audio.play();
 					run(); //el hilo principal del juego
 				}
 			}
@@ -233,6 +236,20 @@ function update() {
 	if (currentstate === states.Game) {
 		plataformas.update();
 		obstaculos.update();
+	}
+	//checa si el audio a terminado en segundos, si es así , entra y vuelve a tocar.
+	console.log("time = "+Audio.currentTime);
+	if (navigator.userAgent.indexOf('Chrome') !=-1){
+		if(Audio.currentTime>94){
+		  Audio.currentTime=0;
+		  Audio.play();
+		}
+	}else{
+		if(Audio.currentTime>94000000){
+		  Audio.currentTime=0;
+		  Audio.play();
+		}
+
 	}
 }
 
