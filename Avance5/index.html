@@ -82,20 +82,22 @@ function onpress(evt) {
 
 		// se pasa del estado Splash al estado Game
 		case states.Splash:
+			personaje.inicializaY(ctx, s_fg.d_height);
 			currentstate = states.Game;
 			break;
 
 		// Si se encuentra en el estado Game, y el jugador toca la pantalla, entonces se localiza el punto de toque...y se determina si el boton brinca fue presionado o en otro caso, el boton bajar.
 		case states.Game:
 			var pos = getMousePos(canvas,evt);
-			if(pos.x>0 && pos.x< 80 && pos.y < height && pos.y>height-150 )
+			if(pos.x>0 && pos.x< 80 && pos.y < height && pos.y>height-150 ){
 				personaje.jump(true); //BOTON ARRIBA
+			}
 			else if (pos.x>width-100 && pos.x< width && pos.y < height && pos.y>height-150)
 				onmove(); //BOTON ABAJO 
 			break;
 			//Llamada al state Score
 		case states.Score:
-
+			personaje.inicializaY(ctx, s_fg.d_height);
 			obstaculos.reset(); // Se resetean los obstaculos del juego
 			plataformas.reset(); // se resetean las plataformas
 			currentstate = states.Splash; // se cambia al estado SPlash

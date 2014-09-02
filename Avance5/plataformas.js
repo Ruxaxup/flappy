@@ -1,23 +1,26 @@
-var alturaPlayer=112; //varible que contiene la altura del personaje... solo para determinar la altura a la que se va a colocar la plataforma
-var altura1 = alturaPlayer*2;//altura de la primera plataforma
-var altura2 = alturaPlayer*3.5;//altura de la 2da plataforma
+//var alturaPlayer=personaje.tamañoSpr; //varible que contiene la altura del personaje... solo para determinar la altura a la que se va a colocar la plataforma
+//var altura1 = alturaPlayer*2;//altura de la primera plataforma
+//var altura2 = alturaPlayer*3.5;//altura de la 2da plataforma
 
 
 //obtener altura 1
 function getAltura1(){
-	return altura1;
+	return plataformas.altura1;
 }
 //obtener altura 2
 function getAltura2(){
-	return altura2;
+	return plataformas.altura2;
 }
 
 function getAltura(plataforma){
-	return plataforma==0?altura1:altura2;
+	return plataforma==0?plataformas.altura1:plataformas.altura2;
 }
 
 
 var plataformas = {
+	alturaPlayer:0, //varible que contiene la altura del personaje... solo para determinar la altura a la que se va a colocar la plataforma
+    altura1:0,//altura de la primera plataforma
+    altura2:0,//altura de la 2da plataforma
 
 	_plataformas: [],
 
@@ -30,7 +33,7 @@ var plataformas = {
 	var aux  =	Math.floor((Math.random() * 2) + 1); 
 		var altura=0;
 		switch(aux) {
-			 case 1:
+			 	case 1:
 	   			 altura = height-altura1;
 	         break;
 				 case 2:
@@ -42,6 +45,12 @@ var plataformas = {
 	    	 break;
 		} 
 		return altura;
+	},
+
+	inicializaAlturas:function(){
+		this.alturaPlayer= personaje.tamañoSpr;
+		this.altura1=this.alturaPlayer*2;
+		this.altura2=this.altura1+this.alturaPlayer+30;
 	},
 
 
@@ -68,6 +77,7 @@ var plataformas = {
 
 
 		if (frames % 500 === 0) {
+			this.inicializaAlturas();
 
 			// calcula la posición en "y" de la plataforma
 			//var _y = this.calculaAltura();
@@ -75,16 +85,16 @@ var plataformas = {
 			// mete la plataforma en el arreglo
 			this._plataformas.push({
 				x: width+100,// se le agrega un 100 para que aparezca 100 pixeles fuera de la pantalla
-				y: height - altura1,
+				y: height - this.altura1,
 				width: s_fgPLataforma.width * 7, //se multiplica por 7 para hacer una plataforma del foreground, 7 veces su tamaño
-				height: s_fgPLataforma.height, //se asigna el "alto" de la plataforma... haciendo referencia al alto del sprite
+				height: s_fgPLataforma.d_height, //se asigna el "alto" de la plataforma... haciendo referencia al alto del sprite
 			});
 
 			this._plataformas.push({
 				x: width+100,// se le agrega un 100 para que aparezca 100 pixeles fuera de la pantalla
-				y: height - altura2,
+				y: height - this.altura2,
 				width: s_fgPLataforma.width * 7, //se multiplica por 7 para hacer una plataforma del foreground, 7 veces su tamaño
-				height: s_fgPLataforma.height, //se asigna el "alto" de la plataforma... haciendo referencia al alto del sprite
+				height: s_fgPLataforma.d_height, //se asigna el "alto" de la plataforma... haciendo referencia al alto del sprite
 			});
 
 		}
@@ -109,11 +119,14 @@ var plataformas = {
 			if (r > d2) {
 				//determina si el personaje esta por arriba del obstaculo
 				if (personaje.y<p.y){
+					personaje.estaArriba= true;
 					//de ser así, lo coloca sobre de el y resetea sus valores
 					personaje.resetearValores();
 					personaje.velocity=0.25;// no se deja la velocidad en "0" para que sea suave el momento de tocar la plataforma
 					personaje.y = p.y-35;
 				}
+			}else{
+				personaje.estaArriba=false;
 			}
 			
 			// actualiza la plataforma en cuanto a posición... y además la remueve si ya no es visible

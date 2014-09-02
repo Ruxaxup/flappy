@@ -3,7 +3,10 @@
 var personaje = {
 
 	x: 100,//la posición en X
-	y: 0, //la posición en Y
+	posYPla:0,
+	estaArriba:false,
+	tamañoSpr:0,
+	y:0, //la posición en Y
 	brinca:false, // bandera que determina si el jugador esta brincando
 	brincaB:false, //bandera que determina que sprite usar si el jugador brinca o no
 	dobleJump:true, //dice si se puede dar otro salto o no
@@ -77,7 +80,7 @@ var personaje = {
 		//se coloca el jugador en el alto del suelo (foreground)
 		if (currentstate === states.Splash) {
 
-			this.y = height - ((s_fg.height)/2)-30;//height - 280 + 5*Math.cos(frames/10);
+			this.y = height - this.posYPla-30;//height - 280 + 5*Math.cos(frames/10);
 			this.rotation = 0;
 
 		} else { // game and score state //
@@ -87,9 +90,9 @@ var personaje = {
 			this.y += this.velocity;
 			//determina si el personaje a tocado el suelo... si es así, entonces se coloca a este sobre de él
 			// y se resetean los valores para que el jugador pueda volver a saltar....lo mismo ocurre con las plataformas
-			if (this.y >= height - ((s_fg.height)/2)-28) {
+			if (this.y >= height - (this.posYPla/2)-28) {
 				personaje.resetearValores();
-				this.y = height - ((s_fg.height)/2)-30;//colocar al personaje sobre el suelo
+				this.y = height - (this.posYPla/2)-30;//colocar al personaje sobre el suelo
 			}
 		}
 	},
@@ -106,12 +109,17 @@ var personaje = {
 		//ctx.translate(this.x, this.y);
 		//se determina que sprite se va a usar
 		if(this.brincaB==false){
-			var n = this.animation[this.frame];
-			s_bird[n].drawP(ctx, s_bird[n].d_width, height - (posY + s_bird[n].d_height));
+			if(this.estaArriba==true){
+				var n = this.animation[this.frame];
+				s_bird[n].drawP(ctx, s_bird[n].d_width, this.y);
+			}else{
+				var n = this.animation[this.frame];
+				s_bird[n].drawP(ctx, s_bird[n].d_width, height - (posY + s_bird[n].d_height));
+			}
 		}
 		else if(this.brincaB==true) {
 			var n = this.animation2[this.frame];
-			s_bird[n].drawPJ(ctx, -s_bird[n].width/8, -s_bird[n].height/2);
+			s_bird[n].drawPJ(ctx, s_bird[n].d_width, this.y);
 		}
 		 //draws the bird with center in origo
 		//ver area de choque
@@ -124,4 +132,10 @@ var personaje = {
 
 		ctx.restore();
 	},
+
+	inicializaY: function(ctx,posY){
+		this.y = height - (posY + s_bird[1].d_height);
+		this.posYPla=this.y;
+		this.tamañoSpr=s_bird[1].d_height;
+	}
 };
