@@ -83,6 +83,7 @@ function onpress(evt) {
 		// se pasa del estado Splash al estado Game
 		case states.Splash:
 			personaje.inicializaY(ctx, s_fg.d_height);
+			personaje.initRadius();
 			currentstate = states.Game;
 			break;
 

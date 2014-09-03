@@ -50,7 +50,7 @@ var plataformas = {
 	inicializaAlturas:function(){
 		this.alturaPlayer= personaje.tamañoSpr;
 		this.altura1=this.alturaPlayer*2;
-		this.altura2=this.altura1+this.alturaPlayer+30;
+		this.altura2=this.altura1+this.alturaPlayer+60;
 	},
 
 
@@ -86,19 +86,19 @@ var plataformas = {
 			this._plataformas.push({
 				x: width+100,// se le agrega un 100 para que aparezca 100 pixeles fuera de la pantalla
 				y: height - this.altura1,
-				width: s_fgPLataforma.width * 7, //se multiplica por 7 para hacer una plataforma del foreground, 7 veces su tamaño
+				width: s_fgPLataforma.d_width * 7, //se multiplica por 7 para hacer una plataforma del foreground, 7 veces su tamaño
 				height: s_fgPLataforma.d_height, //se asigna el "alto" de la plataforma... haciendo referencia al alto del sprite
 			});
 
 			this._plataformas.push({
 				x: width+100,// se le agrega un 100 para que aparezca 100 pixeles fuera de la pantalla
 				y: height - this.altura2,
-				width: s_fgPLataforma.width * 7, //se multiplica por 7 para hacer una plataforma del foreground, 7 veces su tamaño
+				width: s_fgPLataforma.d_width * 7, //se multiplica por 7 para hacer una plataforma del foreground, 7 veces su tamaño
 				height: s_fgPLataforma.d_height, //se asigna el "alto" de la plataforma... haciendo referencia al alto del sprite
 			});
 
 		}
-		//ciclo encargado de las plataformas, tanto de su posición como de si el personaje las esta tocando
+		//ciclo encargado de las plataformas, tanto de su posición como de si el personaje se las esta tocando
 		for (var i = 0, len = this._plataformas.length; i < len; i++) {
 			var p = this._plataformas[i];
 			// collision check, calculates x/y difference and
@@ -115,18 +115,17 @@ var plataformas = {
 			//var d1 = dx*dx + dy1*dy1;
 			var d2 = dx*dx + dy2*dy2;
 			var r = (personaje.radius*personaje.radius);
+			//console.log("Cx: "+cx+" Cy2: "+cy2+" Dx: "+dx+" Dy2: "+dy2+ " D2: "+d2+" R: "+r);
 			// determine intersection
 			if (r > d2) {
 				//determina si el personaje esta por arriba del obstaculo
 				if (personaje.y<p.y){
-					personaje.estaArriba= true;
+
 					//de ser así, lo coloca sobre de el y resetea sus valores
 					personaje.resetearValores();
 					personaje.velocity=0.25;// no se deja la velocidad en "0" para que sea suave el momento de tocar la plataforma
-					personaje.y = p.y-35;
+					personaje.y = p.y-30;
 				}
-			}else{
-				personaje.estaArriba=false;
 			}
 			
 			// actualiza la plataforma en cuanto a posición... y además la remueve si ya no es visible
@@ -154,8 +153,8 @@ var plataformas = {
 			//en caso contrario.. si es mas grande, entonces hacemos las repeticiones necesarias
 			//para hacer el ajuste del dibujo
 			else{
-				var repeticiones = p.width/s_fgPLataforma.width
-				var num= s_fgPLataforma.width;
+				var repeticiones = p.width/s_fgPLataforma.d_width
+				var num = s_fgPLataforma.d_width;
 				var contador=0;
 				while (repeticiones!=0){
     				s_fgPLataforma.draw(ctx, p.x+(num*contador), p.y);

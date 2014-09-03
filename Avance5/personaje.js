@@ -21,10 +21,15 @@ var personaje = {
 	animation2: [11,12,13,14,15,16,17,18], // la animación 2 del jugador (cuando salta)
 
 	rotation: 0, //rotación... no es usada por el momento
-	radius: 40, // el radio de nuestro personaje... es quién determina la colisión 
+	radius: 0, // el radio de nuestro personaje... es quién determina la colisión 
 
 	gravity: 0.30, //la gravedad de nuestro entorno
 	_jump: 10,//el valor de jump
+
+
+	initRadius: function(){
+		this.radius = s_bird[1].d_width/4;
+	},
 
 	/**
 	 * controla el salto del personaje
@@ -80,7 +85,8 @@ var personaje = {
 		//se coloca el jugador en el alto del suelo (foreground)
 		if (currentstate === states.Splash) {
 
-			this.y = height - this.posYPla-30;//height - 280 + 5*Math.cos(frames/10);
+			this.y = this.posYPla;//height - 280 + 5*Math.cos(frames/10);
+			console.log("Posicion que le da en la madre: "+this.y);
 			this.rotation = 0;
 
 		} else { // game and score state //
@@ -92,7 +98,7 @@ var personaje = {
 			// y se resetean los valores para que el jugador pueda volver a saltar....lo mismo ocurre con las plataformas
 			if (this.y >= height - (this.posYPla/2)-28) {
 				personaje.resetearValores();
-				this.y = height - (this.posYPla/2)-30;//colocar al personaje sobre el suelo
+				this.y = this.posYPla;//colocar al personaje sobre el suelo
 			}
 		}
 	},
@@ -109,15 +115,14 @@ var personaje = {
 		//ctx.translate(this.x, this.y);
 		//se determina que sprite se va a usar
 		if(this.brincaB==false){
-			if(this.estaArriba==true){
-				var n = this.animation[this.frame];
-				s_bird[n].drawP(ctx, s_bird[n].d_width, this.y);
-			}else{
-				var n = this.animation[this.frame];
-				s_bird[n].drawP(ctx, s_bird[n].d_width, height - (posY + s_bird[n].d_height));
-			}
+			console.log("Esta en FG");
+			var n = this.animation[this.frame];
+			console.log("La que funciona: "+(height - (posY + s_bird[n].d_height)));
+			console.log("La que no funciona: "+this.y);
+			s_bird[n].drawP(ctx, s_bird[n].d_width, height - (posY + s_bird[n].d_height));
+			//s_bird[n].drawP(ctx, s_bird[n].d_width, this.y);
 		}
-		else if(this.brincaB==true) {
+		else if(this.brincaB == true) {
 			var n = this.animation2[this.frame];
 			s_bird[n].drawPJ(ctx, s_bird[n].d_width, this.y);
 		}
@@ -135,6 +140,7 @@ var personaje = {
 
 	inicializaY: function(ctx,posY){
 		this.y = height - (posY + s_bird[1].d_height);
+		console.log("*********************************************************:"+this.y);
 		this.posYPla=this.y;
 		this.tamañoSpr=s_bird[1].d_height;
 	}

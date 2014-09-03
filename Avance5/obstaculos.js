@@ -75,7 +75,7 @@ var obstaculos = {
 		// se añade un pipe cada 500 frames
 
 
-		if (frames % 500 === 0) {
+		if (frames % 500 === 500) {
 			//se obtiene el ancho de plataformas
 			this.getAnchoPlataformas();
 			//Controla que no se repitan las pipes en Y

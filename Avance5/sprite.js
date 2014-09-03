@@ -1,6 +1,6 @@
 const SCALEX_PLAYER = 0.08, SCALEY_PLAYER = 0.2;
 const SCALEY_FG = 0.15;
-const SCALEY_PLAT = 0.05;
+const SCALEX_PLAT = 0.155, SCALEY_PLAT = 0.05;
 var
 // Sprite vars //
 s_bird=[] ,//encargada de los prites del personaje
@@ -40,10 +40,12 @@ function Sprite(img, x, y, widthImg, heightImg, type) {
         break;
         case 2: //Foreground
         this.d_height = height * SCALEY_FG;
+        this.d_width = this.width;
         console.log("Alto FG = "+this.d_height);
         break;
         case 3:
         this.d_height = height * SCALEY_PLAT;
+        this.d_width = width * SCALEX_PLAT;
         break;
     }
     
@@ -59,7 +61,7 @@ Sprite.prototype.draw = function(ctx, x, y) {
     //encargada de dibujar todo lo referente a la imagen 1... que contiene la mayoría de sprites
     if(this.type == 2 || this.type == 3){ //Foreground
         ctx.drawImage(this.img, this.x, this.y, this.width, this.height,
-            x, y, this.width, this.d_height);
+            x, y, this.d_width, this.d_height);
     }else{
         ctx.drawImage(this.img, this.x, this.y, this.width, this.height,
             x, y, this.width, this.height);         
@@ -68,7 +70,6 @@ Sprite.prototype.draw = function(ctx, x, y) {
 };
 
 Sprite.prototype.drawP = function(ctx, x, y) {
-    console.log("Player Y = "+y);
     //encargada de dibujar todo lo referente al personaje en su estado de "corriendo"
             ctx.drawImage(this.img, this.x, this.y, this.width, this.height,
             x, y, this.d_width, this.d_height);
