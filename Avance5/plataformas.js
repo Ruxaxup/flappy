@@ -49,7 +49,7 @@ var plataformas = {
 
 	inicializaAlturas:function(){
 		this.alturaPlayer= personaje.tamañoSpr;
-		this.altura1=this.alturaPlayer*2;
+		this.altura1=this.alturaPlayer*2.5;
 		this.altura2=this.altura1+this.alturaPlayer+60;
 	},
 
@@ -119,12 +119,15 @@ var plataformas = {
 			// determine intersection
 			if (r > d2) {
 				//determina si el personaje esta por arriba del obstaculo
+				console.log("Player y : "+personaje.y);
+				console.log("Plat y: "+p.y);
 				if (personaje.y<p.y){
-
 					//de ser así, lo coloca sobre de el y resetea sus valores
-					personaje.resetearValores();
 					personaje.velocity=0.25;// no se deja la velocidad en "0" para que sea suave el momento de tocar la plataforma
-					personaje.y = p.y-30;
+					//personaje.y = p.y - 30;
+					personaje.y = p.y + p.height;
+					console.log("Ya me toco la plataforma en: "+(p.y + p.height));
+					personaje.resetearValores();
 				}
 			}
 			

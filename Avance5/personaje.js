@@ -36,6 +36,7 @@ var personaje = {
 	 */
 	jump: function(brinca) {
 		if(brinca==true&&dobleJump==true){
+			console.log("BRINCAAAAAAAAAA");
 			this.brincaB=true;//activa animación de brincar
 			contadorJump++;//cuenta el numero de saltos que ha dado el usuario
 			this.velocity = -this._jump;
@@ -93,12 +94,17 @@ var personaje = {
 			//se actualiza la velocidad de acuerdo a la gravedad 
 			this.velocity += this.gravity;
 			//se actualiza la posición en "y"
+			
 			this.y += this.velocity;
+			console.log(this.posYPla);
+
+			//alert();
+
 			//determina si el personaje a tocado el suelo... si es así, entonces se coloca a este sobre de él
 			// y se resetean los valores para que el jugador pueda volver a saltar....lo mismo ocurre con las plataformas
-			if (this.y >= height - (this.posYPla/2)-28) {
+			if(this.y >= this.posYPla){
+				this.y = this.posYPla;
 				personaje.resetearValores();
-				this.y = this.posYPla;//colocar al personaje sobre el suelo
 			}
 		}
 	},
@@ -115,14 +121,16 @@ var personaje = {
 		//ctx.translate(this.x, this.y);
 		//se determina que sprite se va a usar
 		if(this.brincaB==false){
-			console.log("Esta en FG");
+			//console.log("Esta en FG");
 			var n = this.animation[this.frame];
-			console.log("La que funciona: "+(height - (posY + s_bird[n].d_height)));
-			console.log("La que no funciona: "+this.y);
-			s_bird[n].drawP(ctx, s_bird[n].d_width, height - (posY + s_bird[n].d_height));
+			//console.log("La que funciona: "+(height - (posY + s_bird[n].d_height)));
+			//console.log("La que no funciona: "+this.y);
+			//s_bird[n].drawP(ctx, s_bird[n].d_width, height - (posY + s_bird[n].d_height));
+			s_bird[n].drawP(ctx, s_bird[n].d_width, this.y);
 			//s_bird[n].drawP(ctx, s_bird[n].d_width, this.y);
 		}
-		else if(this.brincaB == true) {
+		else {
+			console.log("AQUI NO ENTRAAAAA");
 			var n = this.animation2[this.frame];
 			s_bird[n].drawPJ(ctx, s_bird[n].d_width, this.y);
 		}
